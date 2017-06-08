@@ -20,6 +20,7 @@ namespace TechJobs.Controllers
         public IActionResult Index()
         {
             SearchJobsViewModel jobsViewModel = new SearchJobsViewModel();
+
             jobsViewModel.Title = "Search";
             return View(jobsViewModel);
         }
