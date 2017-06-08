@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using TechJobs.Data;
 using TechJobs.Models;
 using TechJobs.ViewModels;
@@ -37,6 +39,31 @@ namespace TechJobs.Controllers
             // new Job and add it to the JobData data store. Then
             // redirect to the Job detail (Index) action/view for the new Job.
 
+            var employer = jobData.Employers.Find(newJobViewModel.EmployerID);
+            var location = jobData.Locations.Find(newJobViewModel.LocationID);
+            var skill = jobData.CoreCompetencies.Find(newJobViewModel.CoreCompetencyID);
+            var position = jobData.PositionTypes.Find(newJobViewModel.PositionID);
+
+            if (!String.IsNullOrEmpty(newJobViewModel.Name)
+                && !String.IsNullOrEmpty(employer.Value)
+                && !String.IsNullOrEmpty(location.Value)
+                && !String.IsNullOrEmpty(skill.Value)
+                && !String.IsNullOrEmpty(position.Value))
+            {
+                Job newJob = new Job
+                {
+                    Name = newJobViewModel.Name,
+                    Employer = employer,
+                    Location = location,
+                    CoreCompetency = skill,
+                    PositionType = position
+                };
+
+                jobData.Jobs.Add(newJob);
+
+                return Redirect("/Job?id=" + newJob.ID);
+            }
+            
             return View(newJobViewModel);
         }
     }
